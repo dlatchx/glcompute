@@ -12,15 +12,8 @@ func main() {
 		panic(err)
 	}
 
-	s := glc.NewShader()
-	err = s.CompileFile("demo.glsl.comp")
-	//err = s.LoadFile("demo.spv")
-	if err != nil {
-		panic(err)
-	}
-
 	p := glc.NewProgram()
-	err = p.LinkShader(s)
+	err = p.LoadSrc("demo.glsl.comp")
 	if err != nil {
 		panic(err)
 	}

@@ -83,6 +83,18 @@ func (p *Program) LoadFile(path string) error {
 	return p.LoadBuf(bytecode)
 }
 
+func (p *Program) LoadSrc(path string) error {
+	s := NewShader()
+	defer s.Delete()
+
+	err := s.CompileFile(path)
+	if err != nil {
+		return err
+	}
+
+	return p.LinkShader(s)
+}
+
 func (p Program) Dispatch(x, y, z uint32) {
 	p.use()
 	gl.DispatchCompute(x, y, z)
