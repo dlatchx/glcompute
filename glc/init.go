@@ -4,8 +4,8 @@ import (
 	"github.com/go-gl/gl/v4.3-core/gl"
 	"github.com/remogatto/egl"
 
-	"runtime"
 	"fmt"
+	"runtime"
 )
 
 var (

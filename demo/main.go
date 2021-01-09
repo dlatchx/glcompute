@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/adraenwan/glcompute/glc"
 
-	//"fmt"
+	"fmt"
 )
 
 func main() {
@@ -35,7 +35,7 @@ func main() {
 
 	const split = 256
 	for i := 0; i < split; i++ {
-		p.Dispatch(65535 / split, 1, 1)
+		p.Dispatch(65535/split, 1, 1)
 		glc.Sync()
 		//fmt.Println(i)
 	}
@@ -43,9 +43,9 @@ func main() {
 	glc.Sync()
 
 	buf.Map(&bufSlice, glc.MAP_READ)
-	//for i := 0; i < len(bufSlice); i++ {
-	//	fmt.Println(bufSlice[i])
-	//}
+	for i := 0; i < len(bufSlice); i++ {
+		fmt.Println(bufSlice[i])
+	}
 	if !buf.Unmap() {
 		panic("unmap error")
 	}

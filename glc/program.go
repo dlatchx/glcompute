@@ -2,9 +2,9 @@ package glc
 
 import (
 	"fmt"
+	"io/ioutil"
 	"runtime"
 	"strings"
-	"io/ioutil"
 
 	"github.com/go-gl/gl/v4.3-core/gl"
 )

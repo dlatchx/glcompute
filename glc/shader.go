@@ -80,7 +80,7 @@ func (s *Shader) CompileFile(path string) error {
 func (s *Shader) LoadBuf(bytecode []byte) error {
 	gl.ShaderBinary(1, &s.id, gl.SHADER_BINARY_FORMAT_SPIR_V_ARB, gl.Ptr(bytecode), int32(len(bytecode)))
 
-	gl.SpecializeShaderARB(s.id, gl.Str("main\x00"), 0, nil, nil);
+	gl.SpecializeShaderARB(s.id, gl.Str("main\x00"), 0, nil, nil)
 
 	return s.check()
 }
