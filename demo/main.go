@@ -38,7 +38,7 @@ func main() {
 	buf.Download(&bufSlice2)
 	toc_all := time.Now()
 
-	// show star and end of computed buffer
+	// show start and end of computed buffer
 	for i := 0; i < 16; i++ {
 		fmt.Println(bufSlice2[i])
 	}
