@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const BUFLEN = 65536 * 256 * 16
+
 func main() {
 	err := glc.Init()
 	if err != nil {
@@ -15,7 +17,7 @@ func main() {
 
 	p := glc.LoadProgram("demo.comp.glsl")
 
-	bufSlice := make([]int32, 65536)
+	bufSlice := make([]int32, BUFLEN)
 	for i := 0; i < len(bufSlice); i++ {
 		bufSlice[i] = int32(i)
 	}
@@ -24,15 +26,15 @@ func main() {
 	glc.Sync()
 	tic := time.Now()
 
-	p.Call(65536/4, 1, 1, buf)
+	p.Call(BUFLEN/256, 1, 1, buf)
 
 	glc.Sync()
 	toc := time.Now()
 
-	bufSlice2 := make([]int32, 65536)
+	bufSlice2 := make([]int32, BUFLEN)
 	buf.Download(&bufSlice2)
 	for i := 0; i < len(bufSlice2); i++ {
-		fmt.Println(bufSlice2[i])
+		//fmt.Println(bufSlice2[i])
 	}
 
 	fmt.Println("dispatch time:", float64(toc.Sub(tic).Nanoseconds())*1e-6, "ms")
