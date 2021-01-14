@@ -45,6 +45,17 @@ func NewProgram() *Program {
 	return program
 }
 
+func LoadProgram(path string) *Program {
+	prgm := NewProgram()
+
+	err := prgm.LoadSrc(path)
+	if err != nil {
+		panic(err)
+	}
+
+	return prgm
+}
+
 func (p *Program) check() error {
 	var status int32
 	gl.GetProgramiv(p.id, gl.LINK_STATUS, &status)

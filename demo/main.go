@@ -13,11 +13,7 @@ func main() {
 		panic(err)
 	}
 
-	p := glc.NewProgram()
-	err = p.LoadSrc("demo.comp.glsl")
-	if err != nil {
-		panic(err)
-	}
+	p := glc.LoadProgram("demo.comp.glsl")
 
 	buf := glc.NewBufferStorage(65536, 4, glc.BUF_STREAM_COPY)
 
