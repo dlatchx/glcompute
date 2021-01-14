@@ -2,7 +2,7 @@
 #extension GL_ARB_compute_shader: enable
 #extension GL_ARB_shader_storage_buffer_object: enable
 
-layout(std430, binding=1) buffer Buf1 {
+layout(std430, binding=0) buffer Buf1 {
 	uint foo[];
 };
 
