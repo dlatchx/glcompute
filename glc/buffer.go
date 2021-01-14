@@ -123,7 +123,7 @@ func (b *Buffer) MapRange(slicePtr interface{}, offset, length int, accessFlags 
 	gl.BindBuffer(b.target, b.id)
 	baseAddr := gl.MapBufferRange(b.target, offset*b.elemSize, length*b.elemSize, accessFlags)
 
-	sliceHeader := getSliceHeader(&slicePtr)
+	sliceHeader := getSliceHeader(slicePtr)
 	if baseAddr == nil {
 		sliceHeader.Data = 0
 		sliceHeader.Len = 0
@@ -135,14 +135,31 @@ func (b *Buffer) MapRange(slicePtr interface{}, offset, length int, accessFlags 
 	}
 }
 
+func (b *Buffer) mapByte(slicePtr interface{}, accessFlags uint32) {
+	// get mapped memory address
+	gl.BindBuffer(b.target, b.id)
+	baseAddr := gl.MapBufferRange(b.target, 0, b.nbElem*b.elemSize, accessFlags)
+
+	sliceHeader := getSliceHeader(slicePtr)
+	if baseAddr == nil {
+		sliceHeader.Data = 0
+		sliceHeader.Len = 0
+		sliceHeader.Cap = 0
+	} else {
+		sliceHeader.Data = uintptr(baseAddr)
+		sliceHeader.Len = b.nbElem * b.elemSize
+		sliceHeader.Cap = b.nbElem * b.elemSize
+	}
+}
+
 func (b *Buffer) Upload(slicePtr interface{}) {
 	var mmapBindingPoint []byte
-	b.Map(mmapBindingPoint, MAP_WRITE|MAP_INVALIDATE_BUFFER)
+	b.mapByte(&mmapBindingPoint, MAP_WRITE|MAP_INVALIDATE_BUFFER)
 
 	// get a []byte version of input slice to avoid element size problems
 	var byteSlice []byte
 	byteSliceHeader := getSliceHeader(&byteSlice)
-	inputSliceHeader := getSliceHeader(&slicePtr)
+	inputSliceHeader := getSliceHeader(slicePtr)
 	byteSliceHeader.Data = inputSliceHeader.Data
 	byteSliceHeader.Len = inputSliceHeader.Len * b.elemSize
 	byteSliceHeader.Cap = inputSliceHeader.Cap * b.elemSize
@@ -157,15 +174,15 @@ func (b *Buffer) Upload(slicePtr interface{}) {
 
 func (b *Buffer) Download(slicePtr interface{}) {
 	var mmapBindingPoint []byte
-	b.Map(mmapBindingPoint, MAP_READ)
+	b.mapByte(&mmapBindingPoint, MAP_READ)
 
 	// get a []byte version of input slice to avoid element size problems
 	var byteSlice []byte
 	byteSliceHeader := getSliceHeader(&byteSlice)
-	inputSliceHeader := getSliceHeader(&slicePtr)
-	byteSliceHeader.Data = inputSliceHeader.Data
-	byteSliceHeader.Len = inputSliceHeader.Len * b.elemSize
-	byteSliceHeader.Cap = inputSliceHeader.Cap * b.elemSize
+	outputSliceHeader := getSliceHeader(slicePtr)
+	byteSliceHeader.Data = outputSliceHeader.Data
+	byteSliceHeader.Len = outputSliceHeader.Len * b.elemSize
+	byteSliceHeader.Cap = outputSliceHeader.Cap * b.elemSize
 
 	copy(byteSlice, mmapBindingPoint)
 
