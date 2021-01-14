@@ -113,14 +113,17 @@ func (b *Buffer) Map(slicePtr interface{}, accessFlags uint32) {
 	b.MapRange(slicePtr, 0, b.nbElem, accessFlags)
 }
 
+// use black magic to get slice descriptor
+func getSliceHeader(slicePtr interface{}) *reflect.SliceHeader {
+	return (*reflect.SliceHeader)(unsafe.Pointer(reflect.ValueOf(slicePtr).Pointer()))
+}
+
 func (b *Buffer) MapRange(slicePtr interface{}, offset, length int, accessFlags uint32) {
 	// get mapped memory address
 	gl.BindBuffer(b.target, b.id)
 	baseAddr := gl.MapBufferRange(b.target, offset*b.elemSize, length*b.elemSize, accessFlags)
 
-	// use black magic to get slice descriptor
-	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(reflect.ValueOf(slicePtr).Pointer()))
-
+	sliceHeader := getSliceHeader(&slicePtr)
 	if baseAddr == nil {
 		sliceHeader.Data = 0
 		sliceHeader.Len = 0
