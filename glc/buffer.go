@@ -135,6 +135,46 @@ func (b *Buffer) MapRange(slicePtr interface{}, offset, length int, accessFlags 
 	}
 }
 
+func (b *Buffer) Upload(slicePtr interface{}) {
+	var mmapBindingPoint []byte
+	b.Map(mmapBindingPoint, MAP_WRITE|MAP_INVALIDATE_BUFFER)
+
+	// get a []byte version of input slice to avoid element size problems
+	var byteSlice []byte
+	byteSliceHeader := getSliceHeader(&byteSlice)
+	inputSliceHeader := getSliceHeader(&slicePtr)
+	byteSliceHeader.Data = inputSliceHeader.Data
+	byteSliceHeader.Len = inputSliceHeader.Len * b.elemSize
+	byteSliceHeader.Cap = inputSliceHeader.Cap * b.elemSize
+
+	copy(mmapBindingPoint, byteSlice)
+
+	ok := b.Unmap()
+	if !ok {
+		panic("unmap error")
+	}
+}
+
+func (b *Buffer) Download(slicePtr interface{}) {
+	var mmapBindingPoint []byte
+	b.Map(mmapBindingPoint, MAP_READ)
+
+	// get a []byte version of input slice to avoid element size problems
+	var byteSlice []byte
+	byteSliceHeader := getSliceHeader(&byteSlice)
+	inputSliceHeader := getSliceHeader(&slicePtr)
+	byteSliceHeader.Data = inputSliceHeader.Data
+	byteSliceHeader.Len = inputSliceHeader.Len * b.elemSize
+	byteSliceHeader.Cap = inputSliceHeader.Cap * b.elemSize
+
+	copy(byteSlice, mmapBindingPoint)
+
+	ok := b.Unmap()
+	if !ok {
+		panic("unmap error")
+	}
+}
+
 func (b *Buffer) Unmap() bool {
 	gl.BindBuffer(b.target, b.id)
 	return gl.UnmapBuffer(b.target)
