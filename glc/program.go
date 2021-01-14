@@ -102,7 +102,9 @@ func (p Program) Dispatch(x, y, z uint32) {
 
 func (p Program) Call(x, y, z uint32, args ...*Buffer) {
 	for i, b := range args {
-		b.Bind(uint32(i))
+		if b != nil {
+			b.Bind(uint32(i))
+		}
 	}
 
 	p.Dispatch(x, y, z)
