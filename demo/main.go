@@ -41,5 +41,5 @@ func main() {
 		fmt.Println(bufSlice2[i])
 	}
 
-	fmt.Println("dispatch time:", toc.Sub(tic).Milliseconds(), "ms")
+	fmt.Println("dispatch time:", float64(toc.Sub(tic).Nanoseconds())*1e-6, "ms")
 }
