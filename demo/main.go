@@ -27,16 +27,12 @@ func main() {
 	}
 	buf.Upload(&bufSlice)
 
-	buf.Bind(4)
-
 	glc.Sync()
-
 	tic := time.Now()
 
-	p.Dispatch(65536/4, 1, 1)
+	p.Call(65536/4, 1, 1, buf)
 
 	glc.Sync()
-
 	toc := time.Now()
 
 	bufSlice2 := make([]int32, 65536)
