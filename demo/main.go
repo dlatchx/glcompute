@@ -15,13 +15,11 @@ func main() {
 
 	p := glc.LoadProgram("demo.comp.glsl")
 
-	buf := glc.NewBufferStorage(65536, 4, glc.BUF_STREAM_COPY)
-
 	bufSlice := make([]int32, 65536)
 	for i := 0; i < len(bufSlice); i++ {
 		bufSlice[i] = int32(i)
 	}
-	buf.Upload(&bufSlice)
+	buf := glc.LoadBufferStorage(&bufSlice, glc.BUF_STREAM_COPY)
 
 	glc.Sync()
 	tic := time.Now()

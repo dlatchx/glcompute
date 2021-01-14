@@ -96,6 +96,30 @@ func NewBufferUniform(length int, elemSize uintptr, usageHint uint32) *Buffer {
 	return newBuffer(gl.UNIFORM_BUFFER, length, elemSize, usageHint)
 }
 
+func loadBuffer(target uint32, sourceSlicePtr interface{}, usageHint uint32) *Buffer {
+	v := reflect.Indirect(reflect.ValueOf(sourceSlicePtr))
+	length := v.Len()
+	elemSize := v.Type().Elem().Size()
+
+	buf := newBuffer(target, length, elemSize, usageHint)
+
+	buf.Upload(sourceSlicePtr)
+
+	return buf
+}
+
+func LoadBufferAtomic(sourceSlicePtr interface{}, usageHint uint32) *Buffer {
+	return loadBuffer(gl.ATOMIC_COUNTER_BUFFER, sourceSlicePtr, usageHint)
+}
+
+func LoadBufferStorage(sourceSlicePtr interface{}, usageHint uint32) *Buffer {
+	return loadBuffer(gl.SHADER_STORAGE_BUFFER, sourceSlicePtr, usageHint)
+}
+
+func LoadBufferUniform(sourceSlicePtr interface{}, usageHint uint32) *Buffer {
+	return loadBuffer(gl.UNIFORM_BUFFER, sourceSlicePtr, usageHint)
+}
+
 // access flags
 const (
 	MAP_READ       = gl.MAP_READ_BIT
