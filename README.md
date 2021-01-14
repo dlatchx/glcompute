@@ -7,4 +7,4 @@ GLcompute (aka glc) is a Go library  for GPGPU using OpenGL 4.3 compute shaders 
 
 `glc/buffer.go` is the most tricky part ; it uses `unsafe` and `reflect` to interface Go's safe slices with OpenGL's unsafe `mmap`-based GPU memory access.
 
-The rest is basically wrappers for OpenGL objects/functions written with the help of [gotk3](https://github.com/gotk3/gotk3), plus some helper functions.
+The rest is basically wrappers for OpenGL objects/functions written with the help of [go-gl](https://github.com/go-gl/gl/tree/master/v4.3-core/gl), plus some helper functions.
