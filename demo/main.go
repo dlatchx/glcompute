@@ -29,7 +29,7 @@ func main() {
 		panic("unmap error")
 	}
 
-	buf.Bind(4)
+	buf.Bind(1)
 
 	glc.Sync()
 
