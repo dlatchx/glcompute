@@ -3,7 +3,7 @@
 #extension GL_ARB_shader_storage_buffer_object: enable
 
 layout(std430, binding=0) buffer Buf1 {
-	uint foo[];
+	float foo[];
 };
 
 layout(
@@ -12,5 +12,6 @@ layout(
 	local_size_z = 1) in;
 
 void main() {
-	foo[gl_GlobalInvocationID.x] *= 2;
+  uint i = gl_GlobalInvocationID.x;
+	foo[i] = sqrt(foo[i]);
 }
