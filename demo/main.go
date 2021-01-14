@@ -19,15 +19,12 @@ func main() {
 	}
 
 	buf := glc.NewBufferStorage(65535, 4, glc.BUF_STREAM_COPY)
-	var bufSlice []int32
 
-	buf.Map(&bufSlice, glc.MAP_WRITE|glc.MAP_INVALIDATE_BUFFER)
+	bufSlice := make([]int32, 65535)
 	for i := 0; i < len(bufSlice); i++ {
 		bufSlice[i] = int32(i)
 	}
-	if !buf.Unmap() {
-		panic("unmap error")
-	}
+	buf.Upload(bufSlice)
 
 	buf.Bind(1)
 
@@ -42,11 +39,9 @@ func main() {
 
 	glc.Sync()
 
-	buf.Map(&bufSlice, glc.MAP_READ)
-	for i := 0; i < len(bufSlice); i++ {
+	bufSlice2 := make([]int32, 65535)
+	buf.Download(bufSlice2)
+	for i := 0; i < len(bufSlice2); i++ {
 		fmt.Println(bufSlice[i])
-	}
-	if !buf.Unmap() {
-		panic("unmap error")
 	}
 }
