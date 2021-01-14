@@ -2,7 +2,6 @@ package glc
 
 import (
 	"fmt"
-	"io/ioutil"
 	"runtime"
 	"strings"
 
@@ -67,20 +66,6 @@ func (p *Program) LinkShader(shader *Shader) error {
 	gl.AttachShader(p.id, shader.id)
 	gl.LinkProgram(p.id)
 	return p.check()
-}
-
-func (p *Program) LoadBuf(bytecode []byte) error {
-	gl.ProgramBinary(p.id, gl.SPIR_V_BINARY_ARB, gl.Ptr(bytecode), int32(len(bytecode)))
-	return p.check()
-}
-
-func (p *Program) LoadFile(path string) error {
-	bytecode, err := ioutil.ReadFile(path)
-	if err != nil {
-		return err
-	}
-
-	return p.LoadBuf(bytecode)
 }
 
 func (p *Program) LoadSrc(path string) error {

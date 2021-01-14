@@ -76,20 +76,3 @@ func (s *Shader) CompileFile(path string) error {
 
 	return s.CompileStr(string(shaderSource))
 }
-
-func (s *Shader) LoadBuf(bytecode []byte) error {
-	gl.ShaderBinary(1, &s.id, gl.SHADER_BINARY_FORMAT_SPIR_V_ARB, gl.Ptr(bytecode), int32(len(bytecode)))
-
-	gl.SpecializeShaderARB(s.id, gl.Str("main\x00"), 0, nil, nil)
-
-	return s.check()
-}
-
-func (s *Shader) LoadFile(path string) error {
-	buf, err := ioutil.ReadFile(path)
-	if err != nil {
-		return err
-	}
-
-	return s.LoadBuf(buf)
-}
