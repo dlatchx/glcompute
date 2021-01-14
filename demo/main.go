@@ -13,7 +13,7 @@ func main() {
 	}
 
 	p := glc.NewProgram()
-	err = p.LoadSrc("demo.glsl.comp")
+	err = p.LoadSrc("demo.comp.glsl")
 	if err != nil {
 		panic(err)
 	}
