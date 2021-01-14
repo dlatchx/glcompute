@@ -4,6 +4,7 @@ import (
 	"github.com/adraenwan/glcompute/glc"
 
 	"fmt"
+	"time"
 )
 
 func main() {
@@ -30,6 +31,8 @@ func main() {
 
 	glc.Sync()
 
+	tic := time.Now()
+
 	const split = 256
 	for i := 0; i < split; i++ {
 		p.Dispatch(65535/split, 1, 1)
@@ -39,9 +42,13 @@ func main() {
 
 	glc.Sync()
 
+	toc := time.Now()
+
 	bufSlice2 := make([]int32, 65535)
 	buf.Download(bufSlice2)
 	for i := 0; i < len(bufSlice2); i++ {
 		fmt.Println(bufSlice[i])
 	}
+
+	fmt.Println("dispatch time:", toc.Sub(tic).Milliseconds(), "ms")
 }
