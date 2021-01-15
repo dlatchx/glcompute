@@ -9,12 +9,11 @@ import (
 
 const BUFLEN = 65536 * 256 * 8
 
-func main() {
-	err := glc.Init()
-	if err != nil {
-		panic(err)
-	}
+func init() {
+	glc.Init()
+}
 
+func main() {
 	p := glc.LoadProgram("demo.comp.glsl")
 
 	// generate input data
