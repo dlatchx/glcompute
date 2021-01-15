@@ -56,11 +56,13 @@ func initEGL() {
 	}
 }
 
-func Init() error {
+func Init() {
 	runtime.LockOSThread()
 
 	initEGL()
 
 	err := gl.Init()
-	return err
+	if err != nil {
+		panic("glompute: could not initialize OpenGL function bindings")
+	}
 }
