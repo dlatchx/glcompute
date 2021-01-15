@@ -212,7 +212,7 @@ func (b *Buffer) Upload(slicePtr interface{}) {
 	}
 }
 
-/// fetch buffer from GPU
+// fetch buffer from GPU
 func (b *Buffer) Download(slicePtr interface{}) {
 	var mmapBindingPoint []byte
 	b.mapByte(&mmapBindingPoint, MAP_READ)
