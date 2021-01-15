@@ -9,6 +9,10 @@ import (
 	"github.com/go-gl/gl/v4.3-core/gl"
 )
 
+// wrapper for shaders
+// not necessary since Program
+// handles the creation/deletion
+// of shaders
 type Shader struct {
 	id uint32
 }

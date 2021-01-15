@@ -8,14 +8,17 @@ import (
 	"github.com/go-gl/gl/v4.3-core/gl"
 )
 
+// Hight-level wrapper for shader programs
 type Program struct {
 	id uint32
 }
 
+// returns true if the buiffer is ready to be used
 func (p *Program) Ready() bool {
 	return p.id != 0
 }
 
+// free GPU memory
 func (p *Program) Delete() {
 	if p.Ready() {
 		gl.DeleteProgram(p.id)
@@ -33,6 +36,9 @@ func (p Program) use() {
 	gl.UseProgram(p.id)
 }
 
+// returns a new empty program
+// it must be linked with a shader before
+// it can be used
 func NewProgram() *Program {
 	programId := gl.CreateProgram()
 
@@ -45,6 +51,9 @@ func NewProgram() *Program {
 	return program
 }
 
+// init a program then link it
+// with a shader copiled from the source
+// file passed as argument
 func LoadProgram(path string) *Program {
 	prgm := NewProgram()
 
@@ -79,6 +88,8 @@ func (p *Program) LinkShader(shader *Shader) error {
 	return p.check()
 }
 
+// compiles a shader from a file
+// and links it with program
 func (p *Program) LoadSrc(path string) error {
 	s := NewShader()
 	defer s.Delete()
@@ -91,11 +102,18 @@ func (p *Program) LoadSrc(path string) error {
 	return p.LinkShader(s)
 }
 
+// calls glDispatchCompute()
 func (p Program) Dispatch(x, y, z uint32) {
 	p.use()
 	gl.DispatchCompute(x, y, z)
 }
 
+// bind the list of buffers passed in ascending order
+// then calls glDispatchCompute
+// ie. p.Call(a, b, c, buf1, nil, buf2) is equivalent to
+// buf1.Bind(0)
+// buf2.Bind(2)
+// p.Dispacth(a, b, c)
 func (p Program) Call(x, y, z uint32, args ...*Buffer) {
 	for i, b := range args {
 		if b != nil {

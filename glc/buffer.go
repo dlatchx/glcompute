@@ -25,19 +25,26 @@ import (
 // 	UNIFORM_BUFFER            = gl.UNIFORM_BUFFER            // Uniform block storage
 // )
 
-// usage flags
+// buffer usage hint
+// those are passed to the GPU driver
+// to help optimizer when NewBuffer/LoadBuffer
+// is called
+// see https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBufferData.xhtml
 const (
-	BUF_STREAM_DRAW  = gl.STREAM_DRAW
-	BUF_STREAM_READ  = gl.STREAM_READ
-	BUF_STREAM_COPY  = gl.STREAM_COPY
-	BUF_STATIC_DRAW  = gl.STATIC_DRAW
-	BUF_STATIC_READ  = gl.STATIC_READ
-	BUF_STATIC_COPY  = gl.STATIC_COPY
+	BUF_STREAM_DRAW = gl.STREAM_DRAW
+	BUF_STREAM_READ = gl.STREAM_READ
+	BUF_STREAM_COPY = gl.STREAM_COPY
+
+	BUF_STATIC_DRAW = gl.STATIC_DRAW
+	BUF_STATIC_READ = gl.STATIC_READ
+	BUF_STATIC_COPY = gl.STATIC_COPY
+
 	BUF_DYNAMIC_DRAW = gl.DYNAMIC_DRAW
 	BUF_DYNAMIC_READ = gl.DYNAMIC_READ
 	BUF_DYNAMIC_COPY = gl.DYNAMIC_COPY
 )
 
+// Wrapper for OpenGL buffer objects
 type Buffer struct {
 	id uint32
 
@@ -47,10 +54,12 @@ type Buffer struct {
 	elemSize int
 }
 
+// Returns true if the buffer object is ready to be used by opengl
 func (b *Buffer) Ready() bool {
 	return b.id != 0
 }
 
+// Free GPU memory
 func (b *Buffer) Delete() {
 	if b.Ready() {
 		gl.DeleteBuffers(0, &b.id)
@@ -84,14 +93,17 @@ func newBuffer(target uint32, length int, elemSize uintptr, usageHint uint32) *B
 	return buf
 }
 
+// Allocates a buffer object for usage as atomic counters
 func NewBufferAtomic(length int, elemSize uintptr, usageHint uint32) *Buffer {
 	return newBuffer(gl.ATOMIC_COUNTER_BUFFER, length, elemSize, usageHint)
 }
 
+// Allocates a buffer object for storage (mapped R/W access by shaders)
 func NewBufferStorage(length int, elemSize uintptr, usageHint uint32) *Buffer {
 	return newBuffer(gl.SHADER_STORAGE_BUFFER, length, elemSize, usageHint)
 }
 
+// Allocates a buffer object for usage as shader uniform parameter
 func NewBufferUniform(length int, elemSize uintptr, usageHint uint32) *Buffer {
 	return newBuffer(gl.UNIFORM_BUFFER, length, elemSize, usageHint)
 }
@@ -133,6 +145,8 @@ const (
 	MAP_UNSYNCHRONIZED    = gl.MAP_UNSYNCHRONIZED_BIT
 )
 
+// pass a slice buffer then Map will ma it point to the
+// memory-mapped address of the buffer in GPU memory
 func (b *Buffer) Map(slicePtr interface{}, accessFlags uint32) {
 	b.MapRange(slicePtr, 0, b.nbElem, accessFlags)
 }
@@ -142,6 +156,7 @@ func getSliceHeader(slicePtr interface{}) *reflect.SliceHeader {
 	return (*reflect.SliceHeader)(unsafe.Pointer(reflect.ValueOf(slicePtr).Pointer()))
 }
 
+// Map for a subset of the buffer
 func (b *Buffer) MapRange(slicePtr interface{}, offset, length int, accessFlags uint32) {
 	// get mapped memory address
 	gl.BindBuffer(b.target, b.id)
@@ -176,6 +191,7 @@ func (b *Buffer) mapByte(slicePtr interface{}, accessFlags uint32) {
 	}
 }
 
+// send buffer from CPU to GPU
 func (b *Buffer) Upload(slicePtr interface{}) {
 	var mmapBindingPoint []byte
 	b.mapByte(&mmapBindingPoint, MAP_WRITE|MAP_INVALIDATE_BUFFER)
@@ -196,6 +212,7 @@ func (b *Buffer) Upload(slicePtr interface{}) {
 	}
 }
 
+/// fetch buffer from GPU
 func (b *Buffer) Download(slicePtr interface{}) {
 	var mmapBindingPoint []byte
 	b.mapByte(&mmapBindingPoint, MAP_READ)
@@ -221,6 +238,8 @@ func (b *Buffer) Unmap() bool {
 	return gl.UnmapBuffer(b.target)
 }
 
+// Bind the buffer to a shader binding point
+// see https://www.khronos.org/opengl/wiki/GLAPI/glBindBufferBase
 func (b *Buffer) Bind(slot uint32) {
 	gl.BindBufferBase(b.target, slot, b.id)
 }

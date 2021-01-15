@@ -12,6 +12,8 @@ var (
 	disp egl.Display
 )
 
+// fetch error message form C
+// errno system
 func eglError() error {
 	errno := egl.GetError()
 	if errno == egl.SUCCESS {
@@ -21,6 +23,7 @@ func eglError() error {
 	return fmt.Errorf("%s", egl.NewError(errno).Error())
 }
 
+// creates a surfaceless OpenGL context
 func initEGL() {
 	disp = egl.GetDisplay(egl.DEFAULT_DISPLAY)
 
@@ -56,6 +59,9 @@ func initEGL() {
 	}
 }
 
+// Init OpenGL context
+// must be called before calling any other function from glc
+// this function calls glInit()
 func Init() {
 	runtime.LockOSThread()
 
