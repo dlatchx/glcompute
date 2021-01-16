@@ -1,4 +1,5 @@
 # GLcompute
+[![Documentation](https://godoc.org/github.com/adraenwan/glcompute?status.svg)](https://godoc.org/github.com/adraenwan/glcompute)
 
 GLcompute (aka glc) is a Go library  for GPGPU using OpenGL 4.3 compute shaders as the backend.
 
