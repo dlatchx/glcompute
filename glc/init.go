@@ -1,7 +1,7 @@
 package glc
 
 import (
-	"github.com/go-gl/gl/v4.3-core/gl"
+	gl "github.com/adraenwan/opengl-es-go/v3.1/gl"
 	"github.com/remogatto/egl"
 
 	"fmt"
