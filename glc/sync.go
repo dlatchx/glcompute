@@ -3,7 +3,7 @@ package glc
 import (
 	"time"
 
-	"github.com/go-gl/gl/v4.3-core/gl"
+	gl "github.com/adraenwan/opengl-es-go/v3.1/gl"
 )
 
 // memory barrier

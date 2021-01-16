@@ -6,8 +6,14 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/go-gl/gl/v4.3-core/gl"
+	gl "github.com/adraenwan/opengl-es-go/v3.1/gl"
 )
+
+/*
+#include <stdlib.h>
+*/
+import "C"
+import "unsafe"
 
 // wrapper for shaders
 // not necessary since Program
@@ -58,10 +64,11 @@ func (s *Shader) check() error {
 }
 
 func (s *Shader) CompileStr(source string) error {
-	csource, csourceFree := gl.Strs(source)
-	defer csourceFree()
+	csource := C.CString(source)
+	defer C.free(unsafe.Pointer(csource))
+
 	ln := int32(len(source))
-	gl.ShaderSource(s.id, 1, csource, &ln)
+	gl.ShaderSource(s.id, 1, (**uint8)(unsafe.Pointer(&csource)), &ln)
 	gl.CompileShader(s.id)
 
 	err := s.check()
