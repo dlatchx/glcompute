@@ -2,7 +2,7 @@
 #extension GL_ARB_compute_shader: enable
 #extension GL_ARB_shader_storage_buffer_object: enable
 
-#define __at(pos)             (4 * (pos).y * gl_NumWorkGroups.x + 4 * (pos).x)
+#define __at(pos)             ((pos).y * gl_NumWorkGroups.x + (pos).x)
 #define get_at(buf, pos)      buf[__at(pos)]
 #define set_at(buf, pos, col) buf[__at(pos)] = col;
 
