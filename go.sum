@@ -2,3 +2,8 @@ github.com/adraenwan/opengl-es-go v0.0.0-20150603063834-39b7066af7c2 h1:Yzm59/hc
 github.com/adraenwan/opengl-es-go v0.0.0-20150603063834-39b7066af7c2/go.mod h1:uSgZwepxb/uB8Sat8WRdDEr9uJ2N/0QUeQBm++q8YyU=
 github.com/remogatto/egl v0.0.0-20140203134355-fea5ba3496ba h1:0EE2haDQAnaldV7OhCWqltUPcgsZUZttKOGcHKZyxdM=
 github.com/remogatto/egl v0.0.0-20140203134355-fea5ba3496ba/go.mod h1:/SxS0px6zZIo/owvUHed3K8JBZQ10aIpTdMOkjeWlmo=
+gocv.io/x/gocv v0.26.0 h1:1azNvYEM245YN1bdw/WdX5YJzLg3Sr4STX0MqdWBIXM=
+gocv.io/x/gocv v0.26.0/go.mod h1:7Ju5KbPo+R85evmlhhKPVMwXtgDRNX/PtfVfbToSrLU=
+golang.org/x/image v0.0.0-20201208152932-35266b937fa6 h1:nfeHNc1nAqecKCy2FCy4HY+soOOe5sDLJ/gZLbx6GYI=
+golang.org/x/image v0.0.0-20201208152932-35266b937fa6/go.mod h1:FeLwcggjj3mMvU+oOTbSwawSJRM1uh48EjtB4UJZlP0=
+golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
