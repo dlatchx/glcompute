@@ -44,6 +44,10 @@ const (
 	BUF_DYNAMIC_COPY = gl.DYNAMIC_COPY
 )
 
+type Bindable interface {
+	Bind(uint32)
+}
+
 // Wrapper for OpenGL buffer objects
 type Buffer struct {
 	id uint32

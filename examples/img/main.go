@@ -19,9 +19,7 @@ func main() {
 
 	glc.Sync()
 
-	gi1.Bind(0)
-	gi2.Bind(1)
-	p.Dispatch(uint32(im.Width()), uint32(im.Height()), 1)
+	p.Call(uint32(im.Width()), uint32(im.Height()), 1, gi1, gi2)
 
 	glc.Sync()
 

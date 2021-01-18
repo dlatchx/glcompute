@@ -114,7 +114,7 @@ func (p Program) Dispatch(x, y, z uint32) {
 // buf1.Bind(0)
 // buf2.Bind(2)
 // p.Dispacth(a, b, c)
-func (p Program) Call(x, y, z uint32, args ...*Buffer) {
+func (p Program) Call(x, y, z uint32, args ...Bindable) {
 	for i, b := range args {
 		if b != nil {
 			b.Bind(uint32(i))
