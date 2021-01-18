@@ -8,7 +8,6 @@ import (
 type Img struct {
 	width  int
 	height int
-	nbChan int
 }
 
 func (i Img) Width() int {
@@ -19,37 +18,22 @@ func (i Img) Height() int {
 	return i.height
 }
 
-func (i Img) NbChan() int {
-	return i.nbChan
-}
-
 // wrapper for cpu access of image
 type CpuImg struct {
 	Img
 
-	Chans [][]float32
-
-	raster []float32
+	Raster [][4]float32
 }
 
-func NewCpuImg(width, height, nbChan int) *CpuImg {
-	rasterLen := width * height * nbChan
-
-	raster := make([]float32, rasterLen)
-
-	chans := make([][]float32, nbChan)
-	for i := 0; i < nbChan; i++ {
-		chans[i] = raster[rasterLen*i : rasterLen*(i+1)]
-	}
+func NewCpuImg(width, height int) *CpuImg {
+	raster := make([][4]float32, width*height)
 
 	return &CpuImg{
 		Img: Img{
 			width:  width,
 			height: height,
-			nbChan: nbChan,
 		},
-		Chans:  chans,
-		raster: raster,
+		Raster: raster,
 	}
 }
 
@@ -58,12 +42,12 @@ func NewCpuImg(width, height, nbChan int) *CpuImg {
 // is allocated
 func (ci *CpuImg) Upload(dst *GpuImg) *GpuImg {
 	if dst == nil {
-		dst = NewGpuImg(ci.Width(), ci.Height(), ci.NbChan())
-	} else if ci.Width() != dst.Width() || ci.Height() != dst.Height() || ci.NbChan() != dst.NbChan() {
+		dst = NewGpuImg(ci.Width(), ci.Height())
+	} else if ci.Width() != dst.Width() || ci.Height() != dst.Height() {
 		panic("shapes do not match")
 	}
 
-	dst.buf.Upload(&ci.raster)
+	dst.buf.Upload(&ci.Raster)
 
 	return dst
 }
@@ -75,14 +59,13 @@ type GpuImg struct {
 	buf *glc.Buffer
 }
 
-func NewGpuImg(width, height, nbChan int) *GpuImg {
+func NewGpuImg(width, height int) *GpuImg {
 	return &GpuImg{
 		Img: Img{
 			width:  width,
 			height: height,
-			nbChan: nbChan,
 		},
-		buf: glc.NewBufferStorage(width*height*nbChan, 4, glc.BUF_DYNAMIC_COPY),
+		buf: glc.NewBufferStorage(width*height, 4*4, glc.BUF_DYNAMIC_COPY),
 	}
 }
 
@@ -95,23 +78,16 @@ func (gi *GpuImg) Delete() {
 // pass the slice to fn,
 // then unmap
 func (gi *GpuImg) Access(fn func(CpuImg)) {
-	rasterLen := gi.Width() * gi.Height() * gi.NbChan()
-	var raster []float32
+	var raster [][4]float32
 	gi.buf.Map(&raster, glc.MAP_READ|glc.MAP_WRITE)
 	defer gi.buf.Unmap()
-
-	chans := make([][]float32, gi.NbChan())
-	for i := 0; i < gi.NbChan(); i++ {
-		chans[i] = raster[rasterLen*i : rasterLen*(i+1)]
-	}
 
 	fn(CpuImg{
 		Img: Img{
 			gi.width,
 			gi.height,
-			gi.nbChan,
 		},
-		Chans: chans,
+		Raster: raster,
 	})
 }
 
@@ -120,16 +96,18 @@ func (gi *GpuImg) Access(fn func(CpuImg)) {
 // image is allocated
 func (gi *GpuImg) Download(dst *CpuImg) *CpuImg {
 	if dst == nil {
-		dst = NewCpuImg(gi.Width(), gi.Height(), gi.NbChan())
-	} else if gi.Width() != dst.Width() || gi.Height() != dst.Height() || gi.NbChan() != dst.NbChan() {
+		dst = NewCpuImg(gi.Width(), gi.Height())
+	} else if gi.Width() != dst.Width() || gi.Height() != dst.Height() {
 		panic("shapes do not match")
 	}
 
 	gi.Access(func(cSrc CpuImg) {
-		for i := 0; i < gi.NbChan(); i++ {
-			copy(dst.Chans[i], cSrc.Chans[i])
-		}
+		copy(dst.Raster, cSrc.Raster)
 	})
 
 	return dst
+}
+
+func (gi *GpuImg) Bind(slot uint32) {
+	gi.buf.Bind(slot)
 }
