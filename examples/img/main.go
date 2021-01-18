@@ -17,11 +17,7 @@ func main() {
 	gi1 := im.Upload(nil)
 	gi2 := img.NewGpuImg(im.Width(), im.Height())
 
-	glc.Sync()
-
 	p.Call(uint32(im.Width()), uint32(im.Height()), 1, gi1, gi2)
-
-	glc.Sync()
 
 	(gi2).Download(nil).Show("truc")
 }
