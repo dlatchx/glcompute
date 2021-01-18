@@ -19,5 +19,6 @@ func main() {
 
 	p.Call(uint32(im.Width()), uint32(im.Height()), 1, gi1, gi2)
 
-	(gi2).Download(nil).Show("truc")
+	gi2.Download(im)
+	im.Show("truc")
 }
