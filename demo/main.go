@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/adraenwan/glcompute/glc"
+	"github.com/dlatchx/glcompute/glc"
 
 	"fmt"
 	"time"

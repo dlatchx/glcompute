@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"unsafe"
 
-	gl "github.com/adraenwan/opengl-es-go/v3.1/gl"
+    gl "github.com/go-gl/gl/v3.1/gles2"
 )
 
 // const (
@@ -136,8 +136,8 @@ func LoadBufferUniform(sourceSlicePtr interface{}, usageHint uint32) *Buffer {
 const (
 	MAP_READ       = gl.MAP_READ_BIT
 	MAP_WRITE      = gl.MAP_WRITE_BIT
-	MAP_PERSISTENT = gl.MAP_PERSISTENT_BIT
-	MAP_COHERENT   = gl.MAP_COHERENT_BIT
+	MAP_PERSISTENT = gl.MAP_PERSISTENT_BIT_EXT
+	MAP_COHERENT   = gl.MAP_COHERENT_BIT_EXT
 
 	MAP_INVALIDATE_RANGE  = gl.MAP_INVALIDATE_RANGE_BIT
 	MAP_INVALIDATE_BUFFER = gl.MAP_INVALIDATE_BUFFER_BIT
