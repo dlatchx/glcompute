@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"strings"
 
-    gl "github.com/go-gl/gl/v3.1/gles2"
+	gl "github.com/go-gl/gl/v3.1/gles2"
 )
 
 /*
