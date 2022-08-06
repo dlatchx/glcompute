@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/adraenwan/glcompute/glc"
-	"github.com/adraenwan/glcompute/glc/img"
+	"github.com/dlatchx/glcompute/glc"
+	"github.com/dlatchx/glcompute/glc/img"
 )
 
 func init() {

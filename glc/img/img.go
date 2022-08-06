@@ -1,7 +1,7 @@
 package img
 
 import (
-	"github.com/adraenwan/glcompute/glc"
+	"github.com/dlatchx/glcompute/glc"
 )
 
 // image metadata

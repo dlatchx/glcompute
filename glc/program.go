@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"strings"
 
-	gl "github.com/adraenwan/opengl-es-go/v3.1/gl"
+    gl "github.com/go-gl/gl/v3.1/gles2"
 )
 
 // Hight-level wrapper for shader programs

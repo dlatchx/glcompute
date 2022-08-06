@@ -1,11 +1,11 @@
 package glc
 
 import (
-	gl "github.com/adraenwan/opengl-es-go/v3.1/gl"
-	"github.com/remogatto/egl"
-
 	"fmt"
 	"runtime"
+
+	"github.com/remogatto/egl"
+    gl "github.com/go-gl/gl/v3.1/gles2"
 )
 
 var (
